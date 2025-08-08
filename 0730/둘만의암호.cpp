@@ -1,42 +1,29 @@
 #include <string>
 #include <vector>
-
+#include <iostream>
+#include <algorithm>
 using namespace std;
 
 string solution(string s, string skip, int index) {
     string answer = "";
-    
-    for(const char& c : s)
+    int idx = 0;
+    string alphabet = "";
+    sort(skip.begin(), skip.end());
+    for (int i = 0; i < 26; ++i)
     {
-        char changeC = c;
-        int curIdx = 0;
-        while(curIdx < index)
+        if (skip[idx] == 'a' + i)
         {
-            changeC++;
-            if(changeC > 'z')
-            {
-                changeC = 'a';
-            }
-
-            bool isSkip = false;
-            for(const char& skipC : skip)
-            {
-                if(changeC == skipC)
-                {
-                    isSkip = true;
-                    break;
-                }
-            }
-
-            if(isSkip)
-            {
-                continue;
-            }
-            
-            curIdx++;
+            idx += 1;
         }
-        answer += changeC;
+        else
+        {
+            alphabet += 'a' + i;
+        }
     }
-    
+    for (auto t : s)
+    {
+        int pos = alphabet.find(t);
+        answer += alphabet[(pos + index) % alphabet.size()];
+    }
     return answer;
 }
