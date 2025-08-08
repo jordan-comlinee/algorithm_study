@@ -1,74 +1,61 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <algorithm>
+
 using namespace std;
-// º¯ø≠∞˙ ¡∂«’ ∞¸∑√ πÆ¡¶∞° ¿÷¿ª ∞Õ¿∏∑Œ øπªÛ
-// 1. ¡∂∞«¿Ã æ¯¥¬ ∏‚πˆ¥¬ º¯ø≠ »∞øÎ«ÿº≠ ∏Ó∞°¡ˆ ∞ÊøÏ∞° ¿÷¥¬¡ˆ »Æ¿Œ
-// 2. ¡∂∞«¿Ã ¿÷¥¬ ∏‚πˆ∏¶ µŒ¥¬ ∞ÊøÏ¿« ºˆ∏¶ ±∏«—¥Ÿ.  -> ¿Ã∞… æÓ∂ª∞‘ ±∏«‘?
-// 3. answer = 1*2
 
-// 1. 8!¿« ∞ÊøÏ¿« ºˆ∏¶ ∞°¡¯ ∏µÁ 40320∞°¡ˆ¿« º¯ø≠¿ª ±∏«—¥Ÿ.
-// 2. ¿Á±Õ∏¶ ≈Î«— ∞ÊøÏ¿« ºˆ∞° ≥™ø¬ ∞ÊøÏ, data¿« ¡∂∞«¿ª »Æ¿Œ«—¥Ÿ.
-// -> Ω√∞£ √ ∞˙¿« ∞°¥…º∫¿Ã ¿÷æÓ∫∏¿”
-
-const vector<string> kakao = { "A", "C", "F", "J", "M", "N", "R", "T" };
-
-bool check(vector<string> members, vector<string>& data)
-{
-    for (auto d : data)
-    {
-        int posa, posb;
-        char a = d[0];
-        char b = d[2];
-        char sign = d[3];
-        int condition = d[4] - '0';
-        for (int i = 0; i < 8; ++i)
-        {
-            if (members[i][0] == a) posa = i;
-            if (members[i][0] == b) posb = i;
-        }
-        switch (sign)
-        {
-        case '=':
-            if (abs(posa - posb) - 1 != condition) return false;
-            break;
-        case '<':
-            if (abs(posa - posb) - 1 >= condition) return false;
-            break;
-        case '>':
-            if (abs(posa - posb) - 1 <= condition) return false;
-            break;
-        default:
-            break;
-        }
-    }
-    return true;
-}
-
-void dfs(vector<string> members, vector<bool> visited, int& answer, vector<string>& data)
-{
-    if (members.size() == 8 && check(members, data))
-    {
-        answer++;
-        return;
-    }
-    for (int i = 0; i < visited.size(); ++i)
-    {
-        if (!visited[i])
-        {
-            visited[i] = true;
-            members.push_back(kakao[i]);
-            dfs(members, visited, answer, data);
-            visited[i] = false;
-            members.pop_back();
-        }
-
-    }
-}
-
+// ÔøΩ¬Ñ¬ó ËπÇ¬Ä¬à¬òÁëú ÔøΩ¬ï¬ù¬ò¬ï ÂØÉÏéå¬ö ¬ï‚ë•¬à¬ò ¬ÇÎåÅ¬ó¬ê Áè•¬àÊπ≤Í≥†¬ô¬î ËÇÑ¬î¬ì¬úÁëú Áëó ¬û¬ë¬ÑÍπä¬ïÎåÅÔºú¬ÑÎ™Ñ¬ö¬î.
 int solution(int n, vector<string> data) {
     int answer = 0;
-    vector<bool> visited(8, false);
-    dfs(vector<string>(), visited, answer, data);
+    
+    const int friendNum = 8;
+    string kakaoFriends = "ACFJMNRT";
+    const int conditionNum = data.size();
+    
+    do
+    {
+        bool isGood = true;
+        for(const auto& d : data)
+        {
+            char A = d[0];
+            char B = d[2];
+            char condition = d[3];
+            int limit = d[4] - '0';
+
+            int AIdx = kakaoFriends.find(A);
+            int BIdx = kakaoFriends.find(B);
+            int gap = abs(AIdx - BIdx) - 1;
+
+            if(condition == '=')
+            {
+                if(gap != limit)
+                {
+                    isGood = false;
+                    break;
+                }
+            }
+            else if(condition == '<')
+            {
+                if(gap >= limit)
+                {
+                    isGood = false;
+                    break;
+                }
+            }
+            else if(condition == '>')
+            {
+                if(gap <= limit)
+                {
+                    isGood = false;
+                    break;
+                }
+            }
+        }
+        if(isGood)
+        {
+            ++answer;
+        }
+    }while(next_permutation(kakaoFriends.begin(), kakaoFriends.end()));
     return answer;
 }

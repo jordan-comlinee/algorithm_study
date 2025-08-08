@@ -1,47 +1,66 @@
 #include <string>
 #include <vector>
-#include <unordered_map>
-#include <cmath>
 #include <queue>
-#include <numeric>
+#include <algorithm>
+#include <climits>
+#include <cmath>
+#include <iostream>
+
 using namespace std;
 
-int check(vector<vector<int>>& wires, int m, int n)
+int bfs(const int wiresNum, const vector<vector<int>>& tree, vector<bool>& visited)
 {
-    unordered_map<int, vector<int>> connect;
-    for (int i = 0; i < wires.size(); ++i)
-    {
-        if (i == m) continue;
-        connect[wires[i][0]].push_back(wires[i][1]);
-        connect[wires[i][1]].push_back(wires[i][0]);
-    }
-    vector<int> net(n + 1, 0);
     queue<int> q;
     q.push(1);
-    net[1] = 1;
-    while (!q.empty())
+    visited[1] = true;
+
+    int wierNum = 1;
+
+    while(!q.empty())
     {
-        int cur = q.front(); q.pop();
-        for (auto c : connect[cur])
+        int c = q.front();
+        q.pop();
+
+        for(const int& next : tree[c])
         {
-            if (net[c] != 1)
+            if(!visited[next])
             {
-                net[c] = 1;
-                q.push(c);
+                visited[next] = true;
+                q.push(next);
+                ++wierNum;
             }
         }
-
     }
-    int groupA = accumulate(net.begin(), net.end(), 0);
-    int groupB = n - groupA;
-    return abs(groupA - groupB);
+
+    return wierNum;
 }
 
 int solution(int n, vector<vector<int>> wires) {
-    int answer = INT32_MAX;
-    for (int i = 0; i < wires.size(); ++i)
+    int answer = INT_MAX;
+    
+    const int wiresNum = n;
+    
+    for(int i = 0; i < wires.size(); ++i)
     {
-        answer = min(check(wires, i, n), answer);
-    }
+        vector<vector<int>> tree(n + 1);
+        vector<bool> visited(n + 1, false);
+
+        for(int j = 0; j < wires.size(); ++j)
+        {
+            if(i == j)
+            {
+                continue;
+            }
+            
+            tree[wires[j][0]].emplace_back(wires[j][1]);
+            tree[wires[j][1]].emplace_back(wires[j][0]);
+        }
+        
+        int wireNum1 = bfs(wiresNum, tree, visited);
+        int wireNum2 = n - wireNum1;
+        
+        answer = min(answer, abs(wireNum1 - wireNum2));
+    }    
+    
     return answer;
 }

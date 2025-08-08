@@ -1,36 +1,58 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <iostream>
+
 using namespace std;
 
-vector<int> solution(int N, vector<int> stages) {
-    vector<int> answer(N);
-    vector<int> fail(N + 2, 0);
-    vector<pair<double, int>> failPercent(N, { 0.0, 0 });
-    int players = stages.size();
-    for (int i = 0; i < stages.size(); ++i)
+typedef struct Info
+{
+    int stageNumber;
+    float probability;
+    
+    bool operator<(const Info& other) const
     {
-        fail[stages[i]]++;
-    }
-    for (int i = 0; i < N; ++i)
-    {
-        failPercent[i].second = i + 1;
-        if (players == 0) failPercent[i].first = 0.0;
-        else
+        if(probability != other.probability)
         {
-            failPercent[i].first = (double)((double)fail[i + 1] / (double)players);
-            players -= fail[i + 1];
-
+            return probability > other.probability;
         }
+        return stageNumber < other.stageNumber;
     }
-    sort(failPercent.begin(), failPercent.end(), [](const pair<double, int>& a, const pair<double, int>& b) {
-        if (a.first == b.first) return a.second < b.second;
-        return a.first > b.first;
-        });
-    for (int i = 0; i < N; ++i)
+}info;
+
+vector<int> solution(int N, vector<int> stages) {
+    vector<int> answer;
+    
+    int totalPlayerNum = stages.size();
+    
+    vector<int> xStageFailPalyerNum(N + 2, 0);
+    for(const int& stage : stages)
     {
-        answer[i] = failPercent[i].second;
+        ++xStageFailPalyerNum[stage];
+    }
+    
+    vector<info> failInfoList;
+    
+    int remainPlayer = totalPlayerNum;
+    for(int stage = 1; stage <= N; ++stage)
+    {
+        int failPlayer = xStageFailPalyerNum[stage];
+
+        float probability;
+        if(remainPlayer > 0)
+        {
+            probability = static_cast<float>(failPlayer) / static_cast<float>(remainPlayer);
+        }
+
+        failInfoList.push_back({ stage, probability });
+
+        remainPlayer -= failPlayer;
+    }
+    
+    sort(failInfoList.begin(), failInfoList.end());
+
+    for(const auto& info : failInfoList)
+    {
+        answer.emplace_back(info.stageNumber);
     }
     return answer;
 }

@@ -1,23 +1,28 @@
 #include <string>
 #include <vector>
-#include <deque>
-#include <iostream>
+#include <algorithm>
+#include <cmath>
 using namespace std;
 
 int solution(int n) {
     int answer = 0;
-    int cnt = 1;
-    deque<int> q;
-    while (n > 0)
+    
+    vector<int> three;
+    while(n / 3)
     {
-        q.push_front(n % 3);
+        three.emplace_back(n % 3);
         n /= 3;
     }
-    while (!q.empty())
+    
+    three.emplace_back(n % 3);
+    
+    int N = three.size() - 1;
+    int idx = 0;
+    for(int i = N; i >= 0; --i)
     {
-        answer += q.front() * cnt;
-        q.pop_front();
-        cnt *= 3;
+        answer += pow(3, i) * three[idx];
+        ++idx;
     }
+   
     return answer;
 }

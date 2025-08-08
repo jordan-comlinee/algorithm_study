@@ -1,54 +1,58 @@
 #include <string>
 #include <vector>
-using namespace std;
+#include <iostream>
 
-const int ATTACK = 1;
-const int HEAL = 2;
+using namespace std;
 
 int solution(vector<vector<int>> board, vector<vector<int>> skill) {
     int answer = 0;
-    int R = board.size();
-    int C = board[0].size();
-
-    // ´©ÀûÇÕÀ» À§ÇÑ Â÷ÀÌ ¹è¿­ (R+2 ¡¿ C+2 »ç¿ëÇÏ¸é ¾ÈÀü)
-    vector<vector<int>> diff(R + 2, vector<int>(C + 2, 0));
-
-    // ½ºÅ³ Àû¿ë (Â÷ÀÌ ¹è¿­¿¡ ´©Àû)
-    for (auto s : skill) {
-        int type = s[0];
-        int r1 = s[1], c1 = s[2];
-        int r2 = s[3], c2 = s[4];
-        int degree = s[5];
-
-        if (type == ATTACK) degree = -degree;
-
-        diff[r1][c1] += degree;
-        diff[r1][c2 + 1] -= degree;
-        diff[r2 + 1][c1] -= degree;
-        diff[r2 + 1][c2 + 1] += degree;
-    }
-
-    // °¡·Î ´©ÀûÇÕ
-    for (int i = 0; i < R + 1; ++i) {
-        for (int j = 1; j < C + 1; ++j) {
-            diff[i][j] += diff[i][j - 1];
+    
+    const int N = board.size();
+    const int M = board[0].size();
+    
+    const int skillNum = skill.size();
+    
+    for(int skillIdx = 0; skillIdx < skillNum; ++skillIdx)
+    {
+        int r1 = skill[skillIdx][1];
+        int c1 = skill[skillIdx][2];
+        int r2 = skill[skillIdx][3];
+        int c2 = skill[skillIdx][4];
+        int degree = skill[skillIdx][5];
+        
+        if(skill[skillIdx][0] == 1)     // æ€¨ë“¦êº½
+        {
+            for(int rr1 = r1; rr1 <= r2; ++rr1)
+            {
+                for(int cc1 = c1; cc1 <= c2; ++cc1)
+                {
+                    board[rr1][cc1] -= degree;
+                }
+            }
+        }
+        
+        else if(skill[skillIdx][0] == 2)     // ÂšÂŒè¹‚
+        {
+            for(int rr1 = r1; rr1 <= r2; ++rr1)
+            {
+                for(int cc1 = c1; cc1 <= c2; ++cc1)
+                {
+                    board[rr1][cc1] += degree;
+                }
+            }
         }
     }
-
-    // ¼¼·Î ´©ÀûÇÕ
-    for (int j = 0; j < C + 1; ++j) {
-        for (int i = 1; i < R + 1; ++i) {
-            diff[i][j] += diff[i - 1][j];
+    
+    for(int i = 0; i < N; ++i)
+    {
+        for(int j = 0; j < M; ++j)
+        {
+            if(board[i][j] > 0)
+            {
+                ++answer;
+            }
         }
     }
-
-    // ÃÖÁ¾ board °è»ê ¹× answer Ä«¿îÆ®
-    for (int i = 0; i < R; ++i) {
-        for (int j = 0; j < C; ++j) {
-            board[i][j] += diff[i][j];
-            if (board[i][j] > 0) answer++;
-        }
-    }
-
+    
     return answer;
 }
