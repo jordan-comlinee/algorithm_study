@@ -54,6 +54,5 @@ vector<int> solution(int N, vector<int> stages) {
     {
         answer.emplace_back(info.stageNumber);
     }
-    
     return answer;
 }

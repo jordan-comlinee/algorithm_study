@@ -20,7 +20,7 @@ int solution(vector<vector<int>> board, vector<vector<int>> skill) {
         int c2 = skill[skillIdx][4];
         int degree = skill[skillIdx][5];
         
-        if(skill[skillIdx][0] == 1)     // 공격
+        if(skill[skillIdx][0] == 1)     // 怨듦꺽
         {
             for(int rr1 = r1; rr1 <= r2; ++rr1)
             {
@@ -31,7 +31,7 @@ int solution(vector<vector<int>> board, vector<vector<int>> skill) {
             }
         }
         
-        else if(skill[skillIdx][0] == 2)     // 회복
+        else if(skill[skillIdx][0] == 2)     // 蹂
         {
             for(int rr1 = r1; rr1 <= r2; ++rr1)
             {

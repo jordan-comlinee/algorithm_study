@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// 전역 변수를 정의할 경우 함수 내에 초기화 코드를 꼭 작성해주세요.
+// � 蹂瑜 � 寃쎌 ⑥ 댁 珥湲고 肄瑜 瑗 깊댁＜몄.
 int solution(int n, vector<string> data) {
     int answer = 0;
     
@@ -57,6 +57,5 @@ int solution(int n, vector<string> data) {
             ++answer;
         }
     }while(next_permutation(kakaoFriends.begin(), kakaoFriends.end()));
-    
     return answer;
 }
