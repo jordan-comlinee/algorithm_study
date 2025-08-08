@@ -1,7 +1,6 @@
 #include <string>
 #include <vector>
 #include <cmath>
-
 using namespace std;
 
 long long solution(int r1, int r2) {

@@ -2,7 +2,6 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
-
 using namespace std;
 
 int solution(int n) {
@@ -24,6 +23,6 @@ int solution(int n) {
         answer += pow(3, i) * three[idx];
         ++idx;
     }
-    
+   
     return answer;
 }
