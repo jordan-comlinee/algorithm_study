@@ -14,7 +14,7 @@ void printtest(vector<int> a)
     cout << endl;
 }
 
-bool gyoZipHap(vector<int> a, vector<int> b)
+bool gyoZipHap(vector<int> a,vector<int> b)
 {
     for (int i = 0; i < a.size(); ++i)
     {
@@ -29,10 +29,20 @@ bool gyoZipHap(vector<int> a, vector<int> b)
 bool checkStarVect(vector<int> v)
 {
     vector<int> temp;
-
-    for (int i = 0; i < v.size() - 1; i += 2)
+    
+    for(int i = 0; i < v.size() - 1; i += 2)
     {
-        if (v[i] == v[i + 1])
+        temp.resize(0);
+        
+        temp.push_back(v[i]);
+        temp.push_back(v[i+1]);
+        
+        if(!gyoZipHap(v,temp))
+        {
+            return false;
+        }
+        
+        if(v[i] == v[i+1])
         {
             return false;
         }
@@ -40,33 +50,33 @@ bool checkStarVect(vector<int> v)
     return true;
 }
 
-int solution(vector<int> a)
+int solution(vector<int> a) 
 {
     vector<int> SubVect;
-
+    
     int answer = 0;
     int start = a.size() % 2 == 0 ? a.size() : a.size() - 1;
-
-    for (int numOfComponent = start; numOfComponent >= 2; numOfComponent -= 2)
+    
+    for (int numOfComponent = start; numOfComponent >= 2; numOfComponent -= 2 )
     {
         for (int i = 0; i <= a.size() - numOfComponent; ++i)
         {
             SubVect.resize(0);
-
-            for (int j = i; j < i + numOfComponent; ++j)
+            
+            for(int j = i; j < i + numOfComponent; ++j)
             {
                 SubVect.push_back(a[j]);
             }
-
-            // ¿©±â¿¡ ½ºÅ¸¼ö¿­ÀÎÁö ÆÇº°
-
-            printtest(SubVect);
-            if (checkStarVect(SubVect))
+            
+            // ì—¬ê¸°ì— ìŠ¤íƒ€ìˆ˜ì—´ì¸ì§€ íŒë³„
+            
+            //printtest(SubVect);
+            if(checkStarVect(SubVect))
             {
-
+                
                 return SubVect.size();
             }
-
+            
             // --------------------
         }
     }
